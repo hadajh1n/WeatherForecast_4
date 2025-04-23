@@ -11,4 +11,12 @@ interface WeatherApi {
         @Query("units") units: String = "metric",   // Цельсии
         @Query("lang") lang: String                 // Русский язык для описания
     ): CurrentWeather
+
+    @GET("forecast")
+    suspend fun getFiveDayForecast(
+        @Query("q") city: String,                   // Название города
+        @Query("appid") apiKey: String,             // Мой API-ключ
+        @Query("units") units: String = "metric",   // Цельсии
+        @Query("lang") lang: String                 // Русский язык для описания
+    ): FiveDayForecast
 }
