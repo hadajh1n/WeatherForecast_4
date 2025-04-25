@@ -1,115 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
-    <ImageButton
-        android:id="@+id/btnSearchMain"
-        android:src="@drawable/button_search"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:scaleType="centerInside"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"/>
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/cityTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Выберите город"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnSearchMain"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnSearchMain" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/linearLayoutTemperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cityTextView">
+            <!-- Картинка (background) -->
+            <ImageView
+                android:id="@+id/backgroundImageView"
+                android:src="@drawable/background1"
+                android:background="@drawable/background_image_view"
 
-        <TextView
-            android:id="@+id/temperatureTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp" />
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
 
-        <ImageView
-            android:id="@+id/weatherIconImageView"
-            android:layout_width="64dp"
-            android:layout_height="64dp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
-    </LinearLayout>
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
 
-    <TextView
-        android:id="@+id/descriptionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutTemperature" />
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"/>
 
-    <TextView
-        android:id="@+id/feelsLikeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
-        android:layout_marginTop="20dp"/>
+            <!-- Кнопка Search -->
+            <ImageButton
+                android:id="@+id/btnSearchMain"
+                android:src="@drawable/button_search"
 
-    <LinearLayout
-        android:id="@+id/linearLayoutExtra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/feelsLikeTextView"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp">
+                android:layout_width="60dp"
+                android:layout_height="60dp"
 
-        <TextView
-            android:id="@+id/humidityTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
-            android:textSize="20sp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
-        <TextView
-            android:id="@+id/windTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
-            android:textSize="20sp" />
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
 
-        <TextView
-            android:id="@+id/pressureTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
-            android:textSize="20sp" />
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="centerInside"/>
 
-    </LinearLayout>
+            <!-- Название города -->
+            <TextView
+                android:id="@+id/cityTextView"
+                style="@style/cityTextView"
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/forecastRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutExtra"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="Выберите город"
+                android:textColor="@color/white"
+
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/btnSearchMain"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/btnSearchMain"/>
+
+            <!-- Температура (ощущается как) -->
+            <TextView
+                android:id="@+id/feelsLikeTextView"
+                style="@style/feelsLikeTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toTopOf="@+id/linearLayoutTemperature"
+                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                app:layout_constraintTop_toBottomOf="@+id/cityTextView"
+
+                tools:text="Ощущается как: 14C" />
+
+            <!-- Температура и иконка -->
+            <LinearLayout
+                android:id="@+id/linearLayoutTemperature"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                app:layout_constraintTop_toTopOf="@+id/backgroundImageView"
+
+                android:layout_marginBottom="30dp"
+
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/weatherIconImageView"
+
+                    android:layout_width="64dp"
+                    android:layout_height="64dp" />
+
+                <TextView
+                    android:id="@+id/temperatureTextView"
+                    style="@style/temperatureTextView"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    tools:text="14C"/>
+
+            </LinearLayout>
+
+            <!-- Описание погоды -->
+            <TextView
+                android:id="@+id/descriptionTextView"
+                style="@style/descriptionTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutTemperature"
+
+                android:layout_marginTop="30dp"
+
+                tools:text="пасмурно"/>
+
+            <!-- Влажность (%) -->
+            <TextView
+                android:id="@+id/humidityTextView"
+                style="@style/extraTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+
+                android:layout_marginStart="30dp"
+
+                tools:text="Влажность" />
+
+            <!-- Сила ветра (м/с) -->
+            <TextView
+                android:id="@+id/windTextView"
+                style="@style/extraTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+
+                tools:text="Сила ветра" />
+
+            <!-- Давление (гПа) -->
+            <TextView
+                android:id="@+id/pressureTextView"
+                style="@style/extraTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+
+                android:layout_marginEnd="30dp"
+
+                tools:text="Давление" />
+
+            <!-- Прогноз погоды на 5 дней (заголовок) -->
+            <TextView
+                android:id="@+id/fiveDayWeatherTextView"
+                style="@style/fiveDayWeatherTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backgroundImageView"
+
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="50dp"
+
+                android:text="Прогноз на 5 дней"/>
+
+            <!-- Прогноз погоды на 5 дней (основа) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/forecastRecyclerView"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fiveDayWeatherTextView"
+
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

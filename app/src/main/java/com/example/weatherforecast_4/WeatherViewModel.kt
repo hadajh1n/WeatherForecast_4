@@ -19,6 +19,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import com.example.weatherforecast_4.retrofit.Weather
+import kotlin.random.Random
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
@@ -35,7 +36,33 @@ class WeatherViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
+    // LiveData для фоновой картинки
+    private val _backgroundImageResId = MutableLiveData<Int>()
+    val backgroundImageResId: LiveData<Int> = _backgroundImageResId
+
     private val apiKey = "3a40caaed30624dd3ed13790e371b4bd"
+
+    val backgroundImages = listOf(
+        R.drawable.background1,
+        R.drawable.background2,
+        R.drawable.background3,
+        R.drawable.background4,
+        R.drawable.background5,
+        R.drawable.background7,
+        R.drawable.background8,
+        R.drawable.background9,
+    )
+
+    init {
+        // Выбираем случайный фон при создании ViewModel
+        selectRandomBackground()
+    }
+
+    // Метод для выбора случайного фона
+    private fun selectRandomBackground() {
+        val randomBackground = backgroundImages[Random.nextInt(backgroundImages.size)]
+        _backgroundImageResId.value = randomBackground
+    }
 
     fun fetchWeather(city: String) {
         if (city.isBlank()) return

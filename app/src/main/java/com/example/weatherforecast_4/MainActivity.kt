@@ -18,6 +18,7 @@ import kotlin.math.roundToInt
 class MainActivity : AppCompatActivity() {
     private val weatherViewModel: WeatherViewModel by viewModels()
 
+    private lateinit var backgroundImageView: ImageView
     private lateinit var searchButton: ImageButton
     private lateinit var cityTextView: TextView
     private lateinit var temperatureTextView: TextView
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        backgroundImageView = findViewById(R.id.backgroundImageView)
         searchButton = findViewById(R.id.btnSearchMain)
         cityTextView = findViewById(R.id.cityTextView)
         temperatureTextView = findViewById(R.id.temperatureTextView)
@@ -45,6 +47,11 @@ class MainActivity : AppCompatActivity() {
         forecastRecyclerView = findViewById(R.id.forecastRecyclerView)
 
         forecastRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Наблюдение за сменой фона
+        weatherViewModel.backgroundImageResId.observe(this) { resId ->
+            backgroundImageView.setImageResource(resId)
+        }
 
         searchButton.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
@@ -71,9 +78,9 @@ class MainActivity : AppCompatActivity() {
                     .into(weatherIconImageView)
                 descriptionTextView.text = it.weather[0].description
                 feelsLikeTextView.text = "Ощущается как: ${it.main.feelsLike.roundToInt()}°"
-                humidityTextView.text = "Влажность: ${it.main.humidity}%"
-                windTextView.text = "Сила ветра: ${it.wind.speed} м/с"
-                pressureTextView.text = "Давление: ${it.main.pressure} гПа"
+                humidityTextView.text = "Влажность\n${it.main.humidity}%"
+                windTextView.text = "Сила ветра\n${it.wind.speed} м/с"
+                pressureTextView.text = "Давление\n${it.main.pressure} гПа"
             }
         }
 

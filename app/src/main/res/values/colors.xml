@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background">#c8cbd0</color>
+    <color name="textColorBlackTextView">#09000f</color>
+    <color name="backgroundSearch">#212121</color>
+    <color name="colorTextHintSearch">#FFFFFFFF</color>
+    <color name="backgroundItemForecast">#FFFFFFFF</color>
 </resources>

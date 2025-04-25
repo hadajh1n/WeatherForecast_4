@@ -5,31 +5,49 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundSearch"
     tools:context=".SearchActivity">
 
     <LinearLayout
         android:id="@+id/linearLayoutSearch"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
 
+        android:orientation="horizontal">
+
+        <!-- Кнопка "Назад" -->
         <ImageButton
             android:id="@+id/btnBackSearch"
             android:src="@drawable/button_back"
+
             android:layout_width="48dp"
             android:layout_height="48dp"
+
+            android:backgroundTint="#00FFFFFF"
             android:scaleType="centerInside"/>
-        
+
+        <!-- Поле ввода (Search) -->
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/edtSearch"
+            style="@style/searchAppCompatAutoCompleteTextView"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_marginEnd="10dp"
-            android:hint="Выберите город"
-            android:completionThreshold="1"/>
+
+            android:hint="Введите город"
+
+            android:completionThreshold="1"
+            android:ellipsize="none"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:singleLine="true"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

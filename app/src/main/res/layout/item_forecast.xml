@@ -1,32 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:background="@drawable/item_forecast"
+    android:layout_marginTop="5dp">
 
+    <!-- Дата -->
     <TextView
         android:id="@+id/dateTextView"
+        style="@style/itemForecastTextView"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/forecastTemperatureTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/dateTextView"
-        android:layout_marginStart="16dp" />
 
+        android:layout_marginStart="20dp"
+
+        tools:text="24.04.25"/>
+
+    <!-- Иконка погоды -->
     <ImageView
         android:id="@+id/weatherIconItemImageView"
+
         android:layout_width="64dp"
         android:layout_height="64dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/forecastTemperatureTextView"
+        app:layout_constraintStart_toEndOf="@id/dateTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Температура -->
+    <TextView
+        android:id="@+id/forecastTemperatureTextView"
+        style="@style/itemForecastTextView"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/forecastTemperatureTextView"/>
+
+        android:layout_marginEnd="20dp"
+
+        tools:text="14C" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
