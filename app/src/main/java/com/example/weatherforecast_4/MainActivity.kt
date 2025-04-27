@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import com.bumptech.glide.Glide
+import com.example.weatherforecast_4.retrofit.ForecastItem
+import com.example.weatherforecast_4.retrofit.Main
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -96,12 +98,19 @@ class MainActivity : AppCompatActivity() {
         weatherViewModel.error.observe(this) { error ->
             error?.let {
                 cityTextView.text = "Город не найден"
-                temperatureTextView.text = "Не удалось загрузить данные"
-                descriptionTextView.text = it
+                temperatureTextView.text = ""
+                descriptionTextView.text = "Нет подключения к интернету"
                 humidityTextView.text = ""
                 windTextView.text = ""
                 pressureTextView.text = ""
-                forecastRecyclerView.adapter = ForecastAdapter(emptyList())
+                val placeholderList = List(5) { index ->
+                    ForecastItem(
+                        dt = 0L,
+                        main = Main(temp = 0f, feelsLike = 0f, humidity = 0, pressure = 0),
+                        weather = emptyList()
+                    )
+                }
+                forecastRecyclerView.adapter = ForecastAdapter(placeholderList)
             }
         }
     }

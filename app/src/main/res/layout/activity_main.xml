@@ -36,6 +36,7 @@
                 android:layout_marginEnd="10dp"
 
                 android:scaleType="centerCrop"
+                android:alpha="0.85"
                 android:clipToOutline="true"/>
 
             <!-- Кнопка Search -->
@@ -56,7 +57,7 @@
                 android:scaleType="centerInside"/>
 
             <!-- Название города -->
-            <TextView
+            <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/cityTextView"
                 style="@style/cityTextView"
 
@@ -66,14 +67,13 @@
                 android:text="Выберите город"
                 android:textColor="@color/white"
 
-                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="@+id/btnSearchMain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btnSearchMain"/>
 
             <!-- Температура (ощущается как) -->
-            <TextView
+            <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/feelsLikeTextView"
                 style="@style/feelsLikeTextView"
 
@@ -110,7 +110,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp" />
 
-                <TextView
+                <com.example.weatherforecast_4.StrokedTextView
                     android:id="@+id/temperatureTextView"
                     style="@style/temperatureTextView"
 
@@ -122,7 +122,7 @@
             </LinearLayout>
 
             <!-- Описание погоды -->
-            <TextView
+            <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/descriptionTextView"
                 style="@style/descriptionTextView"
 
@@ -138,7 +138,7 @@
                 tools:text="пасмурно"/>
 
             <!-- Влажность (%) -->
-            <TextView
+            <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/humidityTextView"
                 style="@style/extraTextView"
 
@@ -154,7 +154,7 @@
                 tools:text="Влажность" />
 
             <!-- Сила ветра (м/с) -->
-            <TextView
+            <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/windTextView"
                 style="@style/extraTextView"
 
@@ -169,7 +169,7 @@
                 tools:text="Сила ветра" />
 
             <!-- Давление (гПа) -->
-            <TextView
+            <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/pressureTextView"
                 style="@style/extraTextView"
 

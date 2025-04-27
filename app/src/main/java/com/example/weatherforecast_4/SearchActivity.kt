@@ -51,7 +51,7 @@ class SearchActivity : AppCompatActivity() {
         weatherViewModel.error.observe(this) { error ->
             error?.let {
                 if (it.isNotEmpty()) {
-                    cityAutoComplete.error = "Город не найден"
+                    cityAutoComplete.error = "Нет подключения к интернету"
                 }
             }
         }

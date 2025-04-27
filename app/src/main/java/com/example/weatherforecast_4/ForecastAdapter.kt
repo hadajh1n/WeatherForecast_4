@@ -30,20 +30,22 @@ class ForecastAdapter(private val forecastList: List<ForecastItem>) :
 
     override fun onBindViewHolder(holder: ForecastViewHolder, position: Int) {
         val forecast = forecastList[position]
-        // Форматируем дату
-        val date = Date(forecast.dt * 1000)
-        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-        holder.dateTextView.text = sdf.format(date)
-        // Температура
-        holder.temperatureTextView.text = "${forecast.main.temp.roundToInt()}°"
         val iconCode = forecast.weather.firstOrNull()?.icon
-        if (iconCode != null) {
-            val iconUrl = "https://openweathermap.org/img/wn/$iconCode@2x.png"
-            Glide.with(holder.itemView.context)
-                .load(iconUrl)
-                .into(holder.weatherIconItemImageView)
+
+        if (forecast.dt == 0L || iconCode == null || iconCode.isEmpty()) {
+            holder.dateTextView.text = "Нет данных"
+            holder.temperatureTextView.text = ""
+            holder.weatherIconItemImageView.setImageDrawable(null)
         } else {
-            holder.weatherIconItemImageView.setImageDrawable(null) // Очистка, если нет иконки
+            // Форматируем дату
+            val date = Date(forecast.dt * 1000)
+            val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            holder.dateTextView.text = sdf.format(date)
+            // Температура
+            holder.temperatureTextView.text = "${forecast.main.temp.roundToInt()}°С"
+            Glide.with(holder.itemView.context)
+                .load("https://openweathermap.org/img/wn/$iconCode@2x.png")
+                .into(holder.weatherIconItemImageView)
         }
     }
 

@@ -6,7 +6,7 @@
 
     <style name="searchAppCompatAutoCompleteTextView" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">18dp</item>
         <item name="android:textColorHint">@color/colorTextHintSearch</item>
     </style>
 
@@ -16,35 +16,35 @@
     // Название города
     <style name="cityTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">24dp</item>
         <item name="android:fontFamily">sans-serif-black</item>
     </style>
 
     // Температура (основная)
     <style name="temperatureTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">50sp</item>
+        <item name="android:textSize">55dp</item>
         <item name="android:fontFamily">sans-serif-black</item>
     </style>
 
     // Температура (ощущается как)
     <style name="feelsLikeTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20dp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
     // Описание температуры
     <style name="descriptionTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20dp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
     // Влажность, Сила ветра, Давление
     <style name="extraTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textAlignment">center</item>
     </style>
@@ -52,7 +52,7 @@
     // Прогноз погоды на 5 дней (заголовок)
     <style name="fiveDayWeatherTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/textColorBlackTextView</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">22dp</item>
         <item name="android:fontFamily">sans-serif-black</item>
         <item name="android:textAlignment">center</item>
     </style>
@@ -60,7 +60,7 @@
     // ItemForecast
     <style name="itemForecastTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/textColorBlackTextView</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 

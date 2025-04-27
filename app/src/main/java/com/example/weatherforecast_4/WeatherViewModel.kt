@@ -45,12 +45,11 @@ class WeatherViewModel @Inject constructor(
     val backgroundImages = listOf(
         R.drawable.background1,
         R.drawable.background2,
-        R.drawable.background3,
         R.drawable.background4,
         R.drawable.background5,
+        R.drawable.background6,
         R.drawable.background7,
-        R.drawable.background8,
-        R.drawable.background9,
+        R.drawable.background10
     )
 
     init {
@@ -62,6 +61,15 @@ class WeatherViewModel @Inject constructor(
     private fun selectRandomBackground() {
         val randomBackground = backgroundImages[Random.nextInt(backgroundImages.size)]
         _backgroundImageResId.value = randomBackground
+        context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE).edit {
+            putInt("background_res_id", randomBackground)
+        }
+    }
+
+    init {
+        val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
+        val cachedBackground = prefs.getInt("background_res_id", -1)
+        _backgroundImageResId.value = if (cachedBackground != -1) cachedBackground else backgroundImages[Random.nextInt(backgroundImages.size)]
     }
 
     fun fetchWeather(city: String) {
