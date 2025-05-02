@@ -72,10 +72,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btnSearchMain"/>
 
-            <!-- Температура (ощущается как) -->
             <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/feelsLikeTextView"
-                style="@style/feelsLikeTextView"
+                android:id="@+id/dateTextView"
+                style="@style/dateTextView"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,7 +84,7 @@
                 app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
                 app:layout_constraintTop_toBottomOf="@+id/cityTextView"
 
-                tools:text="Ощущается как: 14C" />
+                tools:text="01.05.2025" />
 
             <!-- Температура и иконка -->
             <LinearLayout
@@ -121,6 +120,23 @@
 
             </LinearLayout>
 
+            <!-- Температура (ощущается как) -->
+            <com.example.weatherforecast_4.StrokedTextView
+                android:id="@+id/feelsLikeTextView"
+                style="@style/feelsLikeTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
+                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutTemperature"
+
+                android:layout_marginTop="10dp"
+
+                tools:text="Ощущается как: 14C" />
+
             <!-- Описание погоды -->
             <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/descriptionTextView"
@@ -131,9 +147,9 @@
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutTemperature"
+                app:layout_constraintTop_toBottomOf="@+id/feelsLikeTextView"
 
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
 
                 tools:text="пасмурно"/>
 

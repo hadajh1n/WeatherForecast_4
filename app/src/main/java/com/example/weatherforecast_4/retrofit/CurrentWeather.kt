@@ -6,7 +6,8 @@ data class CurrentWeather(
     val name: String,               // Название города
     val main: Main,                 // Основные погодные параметры
     val weather: List<Weather>,     // Описание погодных условий
-    val wind: Wind                  // Данные о ветре
+    val wind: Wind,                 // Данные о ветре
+    val coord: Coord? = null        // Координаты
 )
 
 data class Main(
@@ -26,3 +27,7 @@ data class Wind(
     val speed: Float                // Скорость ветра (м/с)
 )
 
+data class Coord(
+    val lat: Float,
+    val lon: Float
+)

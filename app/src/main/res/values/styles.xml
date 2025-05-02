@@ -20,6 +20,13 @@
         <item name="android:fontFamily">sans-serif-black</item>
     </style>
 
+    // Текущая дата
+    <style name="dateTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">22dp</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+
     // Температура (основная)
     <style name="temperatureTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
@@ -30,14 +37,14 @@
     // Температура (ощущается как)
     <style name="feelsLikeTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">18dp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
     // Описание температуры
     <style name="descriptionTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">26dp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
 

@@ -19,6 +19,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import com.example.weatherforecast_4.retrofit.Weather
+import java.util.TimeZone
 import kotlin.random.Random
 
 @HiltViewModel
@@ -136,11 +137,19 @@ class WeatherViewModel @Inject constructor(
     }
 
     private fun aggregateToDaily(forecasts: List<ForecastItem>): List<ForecastItem> {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+            timeZone = TimeZone.getDefault() // Учет часового пояса устройства
+        }
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault()).apply {
+            timeZone = TimeZone.getDefault()
+        }
+        // Текущая дата
+        val currentDate = sdf.format(Date(System.currentTimeMillis()))
+
         // Группируем по дате и выбираем прогноз на 12:00
         return forecasts
             .groupBy { sdf.format(Date(it.dt * 1000)) }
+            .filterKeys { it > currentDate } // Пропускаем текущий день
             .mapNotNull { (_, items) ->
                 items.minByOrNull {
                     val time = timeFormat.format(Date(it.dt * 1000))

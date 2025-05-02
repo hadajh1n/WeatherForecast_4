@@ -12,5 +12,7 @@ data class ForecastItem(
 )
 
 data class City(
-    val name: String                // Название города
+    val name: String,               // Название города
+    val country: String? = null,    // Страна
+    val coord: Coord? = null        // Координаты
 )

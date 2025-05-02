@@ -14,6 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.bumptech.glide.Glide
 import com.example.weatherforecast_4.retrofit.ForecastItem
 import com.example.weatherforecast_4.retrofit.Main
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var backgroundImageView: ImageView
     private lateinit var searchButton: ImageButton
     private lateinit var cityTextView: TextView
+    private lateinit var dateTextView: TextView
     private lateinit var temperatureTextView: TextView
     private lateinit var weatherIconImageView: ImageView
     private lateinit var descriptionTextView: TextView
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         backgroundImageView = findViewById(R.id.backgroundImageView)
         searchButton = findViewById(R.id.btnSearchMain)
         cityTextView = findViewById(R.id.cityTextView)
+        dateTextView = findViewById(R.id.dateTextView)
         temperatureTextView = findViewById(R.id.temperatureTextView)
         weatherIconImageView = findViewById(R.id.weatherIconImageView)
         descriptionTextView = findViewById(R.id.descriptionTextView)
@@ -70,16 +75,21 @@ class MainActivity : AppCompatActivity() {
             weatherViewModel.loadCachedForecast()
         }
 
+        // Получение текущей погоды
+        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        val currentDate = sdf.format(Date(System.currentTimeMillis()))
+        dateTextView.text = "Сегодня: ${currentDate}"
+
         weatherViewModel.weather.observe(this) { weather ->
             weather?.let {
                 cityTextView.text = it.name
-                temperatureTextView.text = "${it.main.temp.roundToInt()}°"
+                temperatureTextView.text = "${it.main.temp.roundToInt()}°С"
                 val iconUrl = "https://openweathermap.org/img/wn/${it.weather[0].icon}@2x.png"
                 Glide.with(this@MainActivity)
                     .load(iconUrl)
                     .into(weatherIconImageView)
                 descriptionTextView.text = it.weather[0].description
-                feelsLikeTextView.text = "Ощущается как: ${it.main.feelsLike.roundToInt()}°"
+                feelsLikeTextView.text = "Ощущается как: ${it.main.feelsLike.roundToInt()}°С"
                 humidityTextView.text = "Влажность\n${it.main.humidity}%"
                 windTextView.text = "Сила ветра\n${it.wind.speed} м/с"
                 pressureTextView.text = "Давление\n${it.main.pressure} гПа"
