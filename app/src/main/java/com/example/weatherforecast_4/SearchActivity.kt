@@ -1,7 +1,9 @@
 package com.example.weatherforecast_4
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import androidx.activity.viewModels
@@ -39,6 +41,9 @@ class SearchActivity : AppCompatActivity() {
 
         weatherViewModel.weather.observe(this) { weather ->
             weather?.let {
+                // Флаг, что первый запуск завершён
+                val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                prefs.edit().putBoolean("isFirstLaunch", false).apply()
                 val intent = Intent(this, MainActivity::class.java).apply {
                     putExtra("SELECTED_CITY", it.name)
                 }

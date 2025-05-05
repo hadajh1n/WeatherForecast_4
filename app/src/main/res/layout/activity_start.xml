@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/startActivityBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/start_activity"
+    tools:context=".StartActivity">
+
+    <ImageView
+        android:id="@+id/sunImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="226dp"
+
+        android:background="@drawable/sun_start_activity"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="-400sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:background="@drawable/logo"
+
+        android:layout_width="332dp"
+        android:layout_height="117dp"
+        android:scaleType="centerCrop"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="100dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/descriptionStartTextView"
+        style="@style/descriptionStartTextView"
+
+        android:layout_width="320sp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoImageView"
+
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+
+        android:text="Узнавайте погоду в реальном времени. Выбирайте город и получайте актуальные данные о температуре, осадках и ветре."
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonStartActivity"
+        android:background="@drawable/button_start_activity"
+        style="@style/startActivityButton"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionStartTextView"
+
+        android:layout_marginTop="50dp"
+
+        android:text="Выбрать город"
+        android:paddingHorizontal="20dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

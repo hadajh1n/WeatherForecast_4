@@ -72,6 +72,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btnSearchMain"/>
 
+            <!-- Дата (текущая) -->
             <com.example.weatherforecast_4.StrokedTextView
                 android:id="@+id/dateTextView"
                 style="@style/dateTextView"
@@ -106,8 +107,8 @@
                 <ImageView
                     android:id="@+id/weatherIconImageView"
 
-                    android:layout_width="64dp"
-                    android:layout_height="64dp" />
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"/>
 
                 <com.example.weatherforecast_4.StrokedTextView
                     android:id="@+id/temperatureTextView"
@@ -200,6 +201,53 @@
 
                 tools:text="Давление" />
 
+            <!-- Прогноз погоды на текущий день (заголовок) -->
+            <TextView
+                android:id="@+id/hourlyWeatherTextView"
+                style="@style/hourlyWeatherTextView"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backgroundImageView"
+
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="50dp"
+
+                tools:text="Прогноз на текущий день"/>
+
+            <!-- Прогноз погоды на текущий день (RecycleView) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hourlyForecastRecyclerView"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/fiveDayWeatherTextView"
+                app:layout_constraintTop_toBottomOf="@+id/hourlyWeatherTextView"
+
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <!-- Загрузка (текущий день) -->
+            <ProgressBar
+                android:id="@+id/itemHourlyForecastProgressBar"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toTopOf="@+id/fiveDayWeatherTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hourlyWeatherTextView"
+
+                android:indeterminateTint="@color/black"
+                android:visibility="gone"/>
+
             <!-- Прогноз погоды на 5 дней (заголовок) -->
             <TextView
                 android:id="@+id/fiveDayWeatherTextView"
@@ -209,14 +257,14 @@
                 android:layout_height="wrap_content"
 
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/backgroundImageView"
+                app:layout_constraintTop_toBottomOf="@+id/hourlyForecastRecyclerView"
 
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginStart="50dp"
 
-                android:text="Прогноз на 5 дней"/>
+                tools:text="Прогноз на 5 дней"/>
 
-            <!-- Прогноз погоды на 5 дней (основа) -->
+            <!-- Прогноз погоды на 5 дней ((RecycleView)) -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/forecastRecyclerView"
 
@@ -231,6 +279,21 @@
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"/>
+
+            <!-- Загрузка (на 5 дней) -->
+            <ProgressBar
+                android:id="@+id/itemForecastProgressBar"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fiveDayWeatherTextView"
+
+                android:indeterminateTint="@color/black"
+                android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

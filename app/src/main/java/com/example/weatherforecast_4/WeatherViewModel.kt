@@ -31,8 +31,14 @@ class WeatherViewModel @Inject constructor(
     private val _weather = MutableLiveData<CurrentWeather?>()
     val weather: LiveData<CurrentWeather?> get() = _weather
 
+    private val _hourlyForecast = MutableLiveData<List<ForecastItem>?>()
+    val hourlyForecast: LiveData<List<ForecastItem>?> get() = _hourlyForecast
+
     private val _forecast = MutableLiveData<List<ForecastItem>?>()
     val forecast: LiveData<List<ForecastItem>?> get() = _forecast
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
@@ -76,6 +82,7 @@ class WeatherViewModel @Inject constructor(
     fun fetchWeather(city: String) {
         if (city.isBlank()) return
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = weatherApi.getCurrentWeather(
                     city = city,
@@ -92,7 +99,9 @@ class WeatherViewModel @Inject constructor(
                 }
 
                 // Запрос прогноза
+                fetchHourlyForecast(city)
                 fetchFiveDayForecast(city)
+                _isLoading.value = false
             } catch (e: Exception) {
                 _weather.postValue(null)
                 _error.postValue(if (e.message?.contains("429") == true) {
@@ -100,6 +109,30 @@ class WeatherViewModel @Inject constructor(
                 } else {
                     "Город не найден"
                 })
+            }
+        }
+    }
+
+    private fun fetchHourlyForecast(city: String) {
+        viewModelScope.launch {
+            try {
+                val response = weatherApi.getFiveDayForecast(
+                    city = city,
+                    apiKey = apiKey,
+                    lang = "ru"
+                )
+                // Текущее время в UTC (в секундах)
+                val currentTimeUtc = System.currentTimeMillis() / 1000
+                // Время через 24 часа
+                val endTimeUtc = currentTimeUtc + 24 * 3600
+                // Фильтр прогноза: после текущего времени и в пределах 24 часов
+                val hourlyList = response.list.filter { forecast ->
+                    forecast.dt >= currentTimeUtc && forecast.dt <= endTimeUtc
+                }
+                _hourlyForecast.postValue(hourlyList)
+            } catch (e: Exception) {
+                _hourlyForecast.postValue(null)
+                _error.postValue("Не удалось загрузить почасовой прогноз")
             }
         }
     }
