@@ -17,9 +17,10 @@ import com.bumptech.glide.Glide
 import com.example.weatherforecast_4.retrofit.ForecastItem
 import com.example.weatherforecast_4.retrofit.Main
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.Calendar
 import java.util.Locale
 import kotlin.math.roundToInt
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -108,9 +109,25 @@ class MainActivity : AppCompatActivity() {
 
             weatherViewModel.weather.observe(this) { weather ->
                 weather?.let {
+                    // Получаем смещение часового пояса города в секундах
+                    val timezoneOffset = it.timezone
+
+                    // Создаём объект Calendar с текущим временем устройства
+                    val calendar = Calendar.getInstance()
+
+                    // Получаем смещение часового пояса устройства в секундах
+                    val deviceOffset = calendar.timeZone.rawOffset / 1000
+
+                    // Вычисляем разницу для корректировки
+                    val localOffset = timezoneOffset - deviceOffset
+
+                    // Корректируем время
+                    calendar.add(Calendar.SECOND, localOffset)
+
+                    // Форматируем дату
                     val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-                    val currentDate = sdf.format(Date(System.currentTimeMillis()))
-                    dateTextView.text = "Сегодня: ${currentDate}"
+                    val currentDate = sdf.format(calendar.time)
+                    dateTextView.text = "Сегодня: $currentDate"
 
                     cityTextView.text = it.name
                     temperatureTextView.text = "${it.main.temp.roundToInt()}°С"

@@ -47,7 +47,7 @@ class WeatherViewModel @Inject constructor(
     private val _backgroundImageResId = MutableLiveData<Int>()
     val backgroundImageResId: LiveData<Int> = _backgroundImageResId
 
-    private val apiKey = "3a40caaed30624dd3ed13790e371b4bd"
+    private val apiKey = BuildConfig.WEATHER_API_KEY
 
     val backgroundImages = listOf(
         R.drawable.background1,
@@ -58,6 +58,8 @@ class WeatherViewModel @Inject constructor(
         R.drawable.background7,
         R.drawable.background10
     )
+
+    private var cityTimezoneOffset: Int = 0 // Смещение часового пояса города в секундах
 
     init {
         // Выбираем случайный фон при создании ViewModel
@@ -98,6 +100,9 @@ class WeatherViewModel @Inject constructor(
                     putString("last_city", response.name)
                 }
 
+                // Сохраняем смещение часового пояса города
+                cityTimezoneOffset = response.timezone
+
                 // Запрос прогноза
                 fetchHourlyForecast(city)
                 fetchFiveDayForecast(city)
@@ -122,12 +127,12 @@ class WeatherViewModel @Inject constructor(
                     lang = "ru"
                 )
                 // Текущее время в UTC (в секундах)
-                val currentTimeUtc = System.currentTimeMillis() / 1000
+                val currentTimeCity = System.currentTimeMillis() / 1000 + cityTimezoneOffset
                 // Время через 24 часа
-                val endTimeUtc = currentTimeUtc + 24 * 3600
+                val endTimeUtc = currentTimeCity + 24 * 3600
                 // Фильтр прогноза: после текущего времени и в пределах 24 часов
                 val hourlyList = response.list.filter { forecast ->
-                    forecast.dt >= currentTimeUtc && forecast.dt <= endTimeUtc
+                    forecast.dt >= currentTimeCity - 3 * 3600 && forecast.dt <= endTimeUtc
                 }
                 _hourlyForecast.postValue(hourlyList)
             } catch (e: Exception) {
@@ -171,16 +176,22 @@ class WeatherViewModel @Inject constructor(
 
     private fun aggregateToDaily(forecasts: List<ForecastItem>): List<ForecastItem> {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
-            timeZone = TimeZone.getDefault() // Учет часового пояса устройства
+            timeZone = TimeZone.getTimeZone("UTC") // UTC как базовый
         }
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault()).apply {
-            timeZone = TimeZone.getDefault()
+            timeZone = TimeZone.getTimeZone("UTC")
         }
-        // Текущая дата
-        val currentDate = sdf.format(Date(System.currentTimeMillis()))
+        // Текущая дата в часовом поясе города
+        val currentTimeCity = System.currentTimeMillis() + cityTimezoneOffset * 1000L
+        val currentDate = sdf.format(Date(currentTimeCity))
+
+        val forecastsWithLocalTime = forecasts.map { forecast ->
+            val localDt = forecast.dt + cityTimezoneOffset
+            forecast.copy(dt = localDt)
+        }
 
         // Группируем по дате и выбираем прогноз на 12:00
-        return forecasts
+        return forecastsWithLocalTime
             .groupBy { sdf.format(Date(it.dt * 1000)) }
             .filterKeys { it > currentDate } // Пропускаем текущий день
             .mapNotNull { (_, items) ->

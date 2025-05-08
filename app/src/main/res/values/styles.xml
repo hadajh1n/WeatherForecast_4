@@ -44,7 +44,7 @@
     // Название города
     <style name="cityTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">24dp</item>
+        <item name="android:textSize">20dp</item>
         <item name="android:fontFamily">sans-serif-black</item>
     </style>
 

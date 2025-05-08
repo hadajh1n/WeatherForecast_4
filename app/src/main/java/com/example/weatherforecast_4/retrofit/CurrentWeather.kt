@@ -7,7 +7,8 @@ data class CurrentWeather(
     val main: Main,                 // Основные погодные параметры
     val weather: List<Weather>,     // Описание погодных условий
     val wind: Wind,                 // Данные о ветре
-    val coord: Coord? = null        // Координаты
+    val coord: Coord? = null,       // Координаты
+    val timezone: Int
 )
 
 data class Main(
