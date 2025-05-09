@@ -9,5 +9,6 @@
     <color name="backgroundItemForecast">#FFFFFFFF</color>
     <color name="startActivityGradient1">#3D9BCA</color>
     <color name="startActivityGradient2">#C2DBF8</color>
+    <color name="descriptionStartTextView">#0E3F80</color>
     <color name="buttonStartActivity">#266DC7</color>
 </resources>

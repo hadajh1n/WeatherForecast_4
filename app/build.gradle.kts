@@ -62,6 +62,9 @@ dependencies {
     // Glide для загрузки изображения (иконки погоды)
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    // Обновление экрана
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

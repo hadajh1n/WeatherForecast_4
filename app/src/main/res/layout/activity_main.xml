@@ -1,304 +1,250 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+    android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Картинка (background) -->
-            <ImageView
-                android:id="@+id/backgroundImageView"
-                android:src="@drawable/background1"
-                android:background="@drawable/background_image_view"
-
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="wrap_content">
 
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-
-                android:scaleType="centerCrop"
-                android:alpha="0.85"
-                android:clipToOutline="true"/>
-
-            <!-- Кнопка Search -->
-            <ImageButton
-                android:id="@+id/btnSearchMain"
-                android:src="@drawable/button_search"
-
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-
-                android:backgroundTint="#00FFFFFF"
-                android:scaleType="centerInside"/>
-
-            <!-- Название города -->
-            <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/cityTextView"
-                style="@style/cityTextView"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="Выберите город"
-                android:textColor="@color/white"
-
-                app:layout_constraintBottom_toBottomOf="@+id/btnSearchMain"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btnSearchMain"/>
-
-            <!-- Дата (текущая) -->
-            <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/dateTextView"
-                style="@style/dateTextView"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintBottom_toTopOf="@+id/linearLayoutTemperature"
-                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
-                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
-                app:layout_constraintTop_toBottomOf="@+id/cityTextView"
-
-                tools:text="01.05.2025" />
-
-            <!-- Температура и иконка -->
-            <LinearLayout
-                android:id="@+id/linearLayoutTemperature"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
-                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
-                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
-                app:layout_constraintTop_toTopOf="@+id/backgroundImageView"
-
-                android:layout_marginBottom="30dp"
-
-                android:gravity="center"
-                android:orientation="horizontal">
-
+                <!-- Картинка (background) -->
                 <ImageView
-                    android:id="@+id/weatherIconImageView"
+                    android:id="@+id/backgroundImageView"
+                    android:src="@drawable/background1"
+                    android:background="@drawable/background_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:scaleType="centerCrop"
+                    android:alpha="0.85"
+                    android:clipToOutline="true"/>
 
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"/>
+                <!-- Кнопка Search -->
+                <ImageButton
+                    android:id="@+id/btnSearchMain"
+                    android:src="@drawable/button_search"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="#00FFFFFF"
+                    android:scaleType="centerInside"/>
 
+                <!-- Название города -->
                 <com.example.weatherforecast_4.StrokedTextView
-                    android:id="@+id/temperatureTextView"
-                    style="@style/temperatureTextView"
-
+                    android:id="@+id/cityTextView"
+                    style="@style/cityTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Выберите город"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnSearchMain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/btnSearchMain"/>
 
-                    tools:text="14C"/>
+                <!-- Дата (текущая) -->
+                <com.example.weatherforecast_4.StrokedTextView
+                    android:id="@+id/dateTextView"
+                    style="@style/dateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/linearLayoutTemperature"
+                    app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                    app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/cityTextView"
+                    tools:text="01.05.2025" />
 
-            </LinearLayout>
+                <!-- Температура и иконка -->
+                <LinearLayout
+                    android:id="@+id/linearLayoutTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                    app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                    app:layout_constraintTop_toTopOf="@+id/backgroundImageView"
+                    android:layout_marginBottom="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-            <!-- Температура (ощущается как) -->
-            <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/feelsLikeTextView"
-                style="@style/feelsLikeTextView"
+                    <ImageView
+                        android:id="@+id/weatherIconImageView"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"/>
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                    <com.example.weatherforecast_4.StrokedTextView
+                        android:id="@+id/temperatureTextView"
+                        style="@style/temperatureTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="14C"/>
 
-                app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
-                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
-                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutTemperature"
+                </LinearLayout>
 
-                android:layout_marginTop="10dp"
+                <!-- Температура (ощущается как) -->
+                <com.example.weatherforecast_4.StrokedTextView
+                    android:id="@+id/feelsLikeTextView"
+                    style="@style/feelsLikeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
+                    app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                    app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayoutTemperature"
+                    android:layout_marginTop="10dp"
+                    tools:text="Ощущается как: 14C" />
 
-                tools:text="Ощущается как: 14C" />
+                <!-- Описание погоды -->
+                <com.example.weatherforecast_4.StrokedTextView
+                    android:id="@+id/descriptionTextView"
+                    style="@style/descriptionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/feelsLikeTextView"
+                    android:layout_marginTop="10dp"
+                    tools:text="пасмурно"/>
 
-            <!-- Описание погоды -->
-            <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/descriptionTextView"
-                style="@style/descriptionTextView"
+                <!-- Влажность (%) -->
+                <com.example.weatherforecast_4.StrokedTextView
+                    android:id="@+id/humidityTextView"
+                    style="@style/extraTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                    app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+                    android:layout_marginStart="30dp"
+                    tools:text="Влажность" />
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <!-- Сила ветра (м/с) -->
+                <com.example.weatherforecast_4.StrokedTextView
+                    android:id="@+id/windTextView"
+                    style="@style/extraTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                    app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+                    tools:text="Сила ветра" />
 
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/feelsLikeTextView"
+                <!-- Давление (гПа) -->
+                <com.example.weatherforecast_4.StrokedTextView
+                    android:id="@+id/pressureTextView"
+                    style="@style/extraTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+                    android:layout_marginEnd="30dp"
+                    tools:text="Давление" />
 
-                android:layout_marginTop="10dp"
+                <!-- Прогноз погоды на текущий день (заголовок) -->
+                <TextView
+                    android:id="@+id/hourlyWeatherTextView"
+                    style="@style/hourlyWeatherTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/backgroundImageView"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="50dp"
+                    tools:text="Прогноз на текущий день"/>
 
-                tools:text="пасмурно"/>
+                <!-- Прогноз погоды на текущий день (RecycleView) -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/hourlyForecastRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/fiveDayWeatherTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/hourlyWeatherTextView"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"/>
 
-            <!-- Влажность (%) -->
-            <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/humidityTextView"
-                style="@style/extraTextView"
+                <!-- Загрузка (текущий день) -->
+                <ProgressBar
+                    android:id="@+id/itemHourlyForecastProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/fiveDayWeatherTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/hourlyWeatherTextView"
+                    android:indeterminateTint="@color/black"
+                    android:visibility="gone"/>
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <!-- Прогноз погоды на 5 дней (заголовок) -->
+                <TextView
+                    android:id="@+id/fiveDayWeatherTextView"
+                    style="@style/fiveDayWeatherTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/hourlyForecastRecyclerView"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="50dp"
+                    tools:text="Прогноз на 5 дней"/>
 
-                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
-                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
-                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
+                <!-- Прогноз погоды на 5 дней ((RecycleView)) -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/forecastRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fiveDayWeatherTextView"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"/>
 
-                android:layout_marginStart="30dp"
+                <!-- Загрузка (на 5 дней) -->
+                <ProgressBar
+                    android:id="@+id/itemForecastProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fiveDayWeatherTextView"
+                    android:indeterminateTint="@color/black"
+                    android:visibility="gone"/>
 
-                tools:text="Влажность" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Сила ветра (м/с) -->
-            <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/windTextView"
-                style="@style/extraTextView"
+        </androidx.core.widget.NestedScrollView>
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
-                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
-                app:layout_constraintStart_toStartOf="@+id/backgroundImageView"
-                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
-
-                tools:text="Сила ветра" />
-
-            <!-- Давление (гПа) -->
-            <com.example.weatherforecast_4.StrokedTextView
-                android:id="@+id/pressureTextView"
-                style="@style/extraTextView"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintBottom_toBottomOf="@+id/backgroundImageView"
-                app:layout_constraintEnd_toEndOf="@+id/backgroundImageView"
-                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"
-
-                android:layout_marginEnd="30dp"
-
-                tools:text="Давление" />
-
-            <!-- Прогноз погоды на текущий день (заголовок) -->
-            <TextView
-                android:id="@+id/hourlyWeatherTextView"
-                style="@style/hourlyWeatherTextView"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/backgroundImageView"
-
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="50dp"
-
-                tools:text="Прогноз на текущий день"/>
-
-            <!-- Прогноз погоды на текущий день (RecycleView) -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/hourlyForecastRecyclerView"
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/fiveDayWeatherTextView"
-                app:layout_constraintTop_toBottomOf="@+id/hourlyWeatherTextView"
-
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"/>
-
-            <!-- Загрузка (текущий день) -->
-            <ProgressBar
-                android:id="@+id/itemHourlyForecastProgressBar"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintBottom_toTopOf="@+id/fiveDayWeatherTextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hourlyWeatherTextView"
-
-                android:indeterminateTint="@color/black"
-                android:visibility="gone"/>
-
-            <!-- Прогноз погоды на 5 дней (заголовок) -->
-            <TextView
-                android:id="@+id/fiveDayWeatherTextView"
-                style="@style/fiveDayWeatherTextView"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hourlyForecastRecyclerView"
-
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="50dp"
-
-                tools:text="Прогноз на 5 дней"/>
-
-            <!-- Прогноз погоды на 5 дней ((RecycleView)) -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/forecastRecyclerView"
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fiveDayWeatherTextView"
-
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"/>
-
-            <!-- Загрузка (на 5 дней) -->
-            <ProgressBar
-                android:id="@+id/itemForecastProgressBar"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fiveDayWeatherTextView"
-
-                android:indeterminateTint="@color/black"
-                android:visibility="gone"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
