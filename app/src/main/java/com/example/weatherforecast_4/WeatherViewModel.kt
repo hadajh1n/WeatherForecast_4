@@ -19,6 +19,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import com.example.weatherforecast_4.retrofit.Weather
+import java.util.Calendar
 import java.util.TimeZone
 import kotlin.random.Random
 
@@ -59,7 +60,7 @@ class WeatherViewModel @Inject constructor(
         R.drawable.background10
     )
 
-    private var cityTimezoneOffset: Int = 0 // Смещение часового пояса города в секундах
+    var cityTimezoneOffset: Int = 0 // Смещение часового пояса города в секундах
 
     init {
         // Выбираем случайный фон при создании ViewModel
@@ -126,15 +127,25 @@ class WeatherViewModel @Inject constructor(
                     apiKey = apiKey,
                     lang = "ru"
                 )
-                // Текущее время в UTC (в секундах)
-                val currentTimeCity = System.currentTimeMillis() / 1000 + cityTimezoneOffset
-                // Время через 24 часа
+                // Использование времени из последнего запроса погоды (weather.dt) как базовое
+                val currentWeather = _weather.value
+                val currentTimeCity = currentWeather?.let { it.dt + it.timezone }
+                    ?: throw IllegalStateException("Текущие данные погоды не доступны")
                 val endTimeUtc = currentTimeCity + 24 * 3600
                 // Фильтр прогноза: после текущего времени и в пределах 24 часов
                 val hourlyList = response.list.filter { forecast ->
                     forecast.dt >= currentTimeCity - 3 * 3600 && forecast.dt <= endTimeUtc
                 }
                 _hourlyForecast.postValue(hourlyList)
+                val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
+                prefs.edit {
+                    hourlyList.forEachIndexed { index, forecast ->
+                        putLong("hourly_dt_$index", forecast.dt - cityTimezoneOffset)
+                        putInt("hourly_temp_$index", forecast.main.temp.roundToInt())
+                        putString("hourly_icon_$index", forecast.weather.firstOrNull()?.icon)
+                    }
+                    putInt("hourly_count", hourlyList.size)
+                }
             } catch (e: Exception) {
                 _hourlyForecast.postValue(null)
                 _error.postValue("Не удалось загрузить почасовой прогноз")
@@ -150,14 +161,16 @@ class WeatherViewModel @Inject constructor(
                     apiKey = apiKey,
                     lang = "ru"
                 )
+                val currentWeather = _weather.value
+                val currentTimeCity = currentWeather?.let { it.dt + it.timezone }
+                    ?: throw IllegalStateException("Текущие данные погоды не доступны")
                 // Выбираем данные на 12:00 для каждого дня
-                val dailyForecasts = aggregateToDaily(response.list)
+                val dailyForecasts = aggregateToDaily(response.list, currentTimeCity)
                 _forecast.postValue(if (dailyForecasts.isEmpty()) null else dailyForecasts)
-                // Сохраняем прогноз в SharedPreferences
                 val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
                 prefs.edit {
                     dailyForecasts.forEachIndexed { index, forecast ->
-                        putLong("forecast_dt_$index", forecast.dt)
+                        putLong("forecast_dt_$index", forecast.dt - cityTimezoneOffset) // Сохранение в UTC
                         putInt("forecast_temp_$index", forecast.main.temp.roundToInt())
                         putString("forecast_icon_$index", forecast.weather.firstOrNull()?.icon)
                     }
@@ -174,16 +187,18 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    private fun aggregateToDaily(forecasts: List<ForecastItem>): List<ForecastItem> {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).apply {
+    private fun aggregateToDaily(forecasts: List<ForecastItem>, currentTimeCity: Long): List<ForecastItem> {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale("ru")).apply {
             timeZone = TimeZone.getTimeZone("UTC") // UTC как базовый
         }
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault()).apply {
+        val timeFormat = SimpleDateFormat("HH:mm", Locale("ru")).apply {
             timeZone = TimeZone.getTimeZone("UTC")
         }
-        // Текущая дата в часовом поясе города
-        val currentTimeCity = System.currentTimeMillis() + cityTimezoneOffset * 1000L
-        val currentDate = sdf.format(Date(currentTimeCity))
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
+            timeInMillis = currentTimeCity * 1000L
+        }
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        val startDate = sdf.format(calendar.time)
 
         val forecastsWithLocalTime = forecasts.map { forecast ->
             val localDt = forecast.dt + cityTimezoneOffset
@@ -193,7 +208,7 @@ class WeatherViewModel @Inject constructor(
         // Группируем по дате и выбираем прогноз на 12:00
         return forecastsWithLocalTime
             .groupBy { sdf.format(Date(it.dt * 1000)) }
-            .filterKeys { it > currentDate } // Пропускаем текущий день
+            .filterKeys { it >= startDate } // Пропуск текущего дня
             .mapNotNull { (_, items) ->
                 items.minByOrNull {
                     val time = timeFormat.format(Date(it.dt * 1000))
@@ -210,14 +225,18 @@ class WeatherViewModel @Inject constructor(
 
     fun loadCachedForecast() {
         val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
-        val count = prefs.getInt("forecast_count", 0)
-        if (count > 0) {
+        val forecastCount = prefs.getInt("forecast_count", 0)
+        val hourlyCount = prefs.getInt("hourly_count", 0)
+
+        if (forecastCount > 0) {
             val daily = mutableListOf<ForecastItem>()
-            for (i in 0 until count) {
+            for (i in 0 until forecastCount) {
+                val dt = prefs.getLong("forecast_dt_$i", 0)
+                val adjustedDt = if (dt != 0L) dt - cityTimezoneOffset else dt // Убирается смещение, если оно было применено
                 val icon = prefs.getString("forecast_icon_$i", null)
                 daily.add(
                     ForecastItem(
-                        dt = prefs.getLong("forecast_dt_$i", 0),
+                        dt = adjustedDt,
                         main = Main(
                             temp = prefs.getInt("forecast_temp_$i", 0).toFloat(),
                             feelsLike = 0f, // Не используется
@@ -229,6 +248,28 @@ class WeatherViewModel @Inject constructor(
                 )
             }
             _forecast.postValue(daily)
+        }
+
+        if (hourlyCount > 0) {
+            val hourly = mutableListOf<ForecastItem>()
+            for (i in 0 until hourlyCount) {
+                val dt = prefs.getLong("hourly_dt_$i", 0)
+                val adjustedDt = if (dt != 0L) dt + cityTimezoneOffset else dt
+                val icon = prefs.getString("hourly_icon_$i", null)
+                hourly.add(
+                    ForecastItem(
+                        dt = adjustedDt,
+                        main = Main(
+                            temp = prefs.getInt("hourly_temp_$i", 0).toFloat(),
+                            feelsLike = 0f,
+                            humidity = 0,
+                            pressure = 0
+                        ),
+                        weather = if (icon != null) listOf(Weather("", "", icon)) else emptyList()
+                    )
+                )
+            }
+            _hourlyForecast.postValue(hourly)
         }
     }
 }

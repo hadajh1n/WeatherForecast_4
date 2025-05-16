@@ -177,7 +177,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/backgroundImageView"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="50dp"
-                    tools:text="Прогноз на текущий день"/>
+                    tools:text="Прогноз на день"/>
 
                 <!-- Прогноз погоды на текущий день (RecycleView) -->
                 <androidx.recyclerview.widget.RecyclerView

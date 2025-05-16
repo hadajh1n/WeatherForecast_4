@@ -11,10 +11,13 @@ import com.example.weatherforecast_4.retrofit.ForecastItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.math.roundToInt
 
-class ForecastAdapter(private val forecastList: List<ForecastItem>) :
-    RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
+class ForecastAdapter(
+    private val forecastList: List<ForecastItem>,
+    private val timezoneOffset: Int
+) : RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 
     class ForecastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
@@ -32,16 +35,18 @@ class ForecastAdapter(private val forecastList: List<ForecastItem>) :
         val forecast = forecastList[position]
         val iconCode = forecast.weather.firstOrNull()?.icon
 
+        val sdfDate = SimpleDateFormat("d MMMM yyyy", Locale("ru")).apply {
+            timeZone = TimeZone.getTimeZone("UTC") // Установка UTC как базовый
+        }
+        val adjustedTime = forecast.dt + timezoneOffset // Корректировка времени с учетом смещения города
+        val dateOnly = sdfDate.format(Date(adjustedTime * 1000))
+
         if (forecast.dt == 0L || iconCode == null || iconCode.isEmpty()) {
             holder.dateTextView.text = "Нет данных"
             holder.temperatureTextView.text = ""
             holder.weatherIconItemImageView.setImageDrawable(null)
         } else {
-            // Форматируем дату
-            val date = Date(forecast.dt * 1000)
-            val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            holder.dateTextView.text = sdf.format(date)
-            // Температура
+            holder.dateTextView.text = dateOnly
             holder.temperatureTextView.text = "${forecast.main.temp.roundToInt()}°С"
             Glide.with(holder.itemView.context)
                 .load("https://openweathermap.org/img/wn/$iconCode@2x.png")

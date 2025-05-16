@@ -8,12 +8,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherforecast_4.retrofit.ForecastItem
-import java.sql.Date
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
-class HourlyForecastAdapter(private val hourlyList: List<ForecastItem>) :
-    RecyclerView.Adapter<HourlyForecastAdapter.HourlyViewHolder>() {
+class HourlyForecastAdapter(
+    private val hourlyList: List<ForecastItem>,
+    private val timezoneOffset: Int
+) : RecyclerView.Adapter<HourlyForecastAdapter.HourlyViewHolder>() {
 
     class HourlyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val timeTextView: TextView = itemView.findViewById(R.id.timeTextView)
@@ -30,17 +33,21 @@ class HourlyForecastAdapter(private val hourlyList: List<ForecastItem>) :
         val forecast = hourlyList[position]
         val iconCode = forecast.weather.firstOrNull()?.icon
 
+        val sdfTime = SimpleDateFormat("HH:mm", Locale("ru")).apply {
+            timeZone = TimeZone.getTimeZone("UTC") // Установка UTC как базовый
+        }
+        val adjustedTime = forecast.dt + timezoneOffset // Корректировка времени с учетом смещения города
+        val dateTime = sdfTime.format(Date(adjustedTime * 1000))
+
         if (forecast.dt == 0L || iconCode == null || iconCode.isEmpty()) {
             holder.timeTextView.text = "Нет данных"
             holder.temperatureTextView.text = ""
             holder.weatherIcon.setImageDrawable(null)
         } else {
-            val date = Date(forecast.dt * 1000)
-            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-            holder.timeTextView.text = sdf.format(date)
+            holder.timeTextView.text = dateTime
             holder.temperatureTextView.text = "${forecast.main.temp.toInt()}°C"
             Glide.with(holder.itemView.context)
-                .load("https://openweathermap.org/img/wn/$iconCode.png")
+                .load("https://openweathermap.org/img/wn/$iconCode@2x.png")
                 .into(holder.weatherIcon)
         }
     }

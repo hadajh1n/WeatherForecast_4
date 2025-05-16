@@ -23,6 +23,8 @@ import java.util.Locale
 import kotlin.math.roundToInt
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.weatherforecast_4.retrofit.CurrentWeather
+import java.util.Date
+import java.util.TimeZone
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -116,17 +118,34 @@ class MainActivity : AppCompatActivity() {
             }
 
             weatherViewModel.weather.observe(this) { weather ->
-                weather?.let { updateWeatherUI(it) }
+                weather?.let {
+                    updateWeatherUI(it)
+                    // Переинициализировать адаптеры после получения timezone
+                    weatherViewModel.hourlyForecast.value?.let { updateHourlyForecastUI(it) }
+                        ?: run { hourlyForecastRecyclerView.adapter = HourlyForecastAdapter(emptyList(), weatherViewModel.cityTimezoneOffset) }
+                    weatherViewModel.forecast.value?.let { updateFiveDayForecastUI(it) }
+                        ?: run { forecastRecyclerView.adapter = ForecastAdapter(emptyList(), weatherViewModel.cityTimezoneOffset) }
+                }
             }
 
             weatherViewModel.hourlyForecast.observe(this) { hourlyList ->
                 hourlyList?.let { updateHourlyForecastUI(it) }
-                    ?: run { hourlyForecastRecyclerView.adapter = HourlyForecastAdapter(emptyList()) }
+                    ?: run {
+                        hourlyForecastRecyclerView.adapter = HourlyForecastAdapter(
+                            emptyList(),
+                            weatherViewModel.cityTimezoneOffset
+                        )
+                    }
             }
 
             weatherViewModel.forecast.observe(this) { forecast ->
                 forecast?.let { updateFiveDayForecastUI(it) }
-                    ?: run { forecastRecyclerView.adapter = ForecastAdapter(emptyList()) }
+                    ?: run {
+                        forecastRecyclerView.adapter = ForecastAdapter(
+                            emptyList(),
+                            weatherViewModel.cityTimezoneOffset
+                        )
+                    }
             }
 
             weatherViewModel.error.observe(this) { error ->
@@ -146,21 +165,30 @@ class MainActivity : AppCompatActivity() {
 
     // Функция обновления UI для текущей погоды
     private fun updateWeatherUI(weather: CurrentWeather) {
-        val timezoneOffset = weather.timezone
-        val calendar = Calendar.getInstance()
-        val deviceOffset = calendar.timeZone.rawOffset / 1000
-        val localOffset = timezoneOffset - deviceOffset
-        calendar.add(Calendar.SECOND, localOffset)
-        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        val cityTimeInSeconds = weather.dt
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = cityTimeInSeconds * 1000L
+            timeZone = TimeZone.getTimeZone("GMT" + if (weather.timezone >= 0) "+${weather.timezone / 3600}" else "${weather.timezone / 3600}")
+        }
+
+        val sdf = SimpleDateFormat("d MMMM yyyy", Locale("ru"))
+        sdf.timeZone = TimeZone.getTimeZone("GMT" + if (weather.timezone >= 0) "+${weather.timezone / 3600}" else "${weather.timezone / 3600}")
         val currentDate = sdf.format(calendar.time)
-        dateTextView.text = "Сегодня: $currentDate"
+
+
+        val sdfTime = SimpleDateFormat("HH:mm", Locale("ru"))
+        sdfTime.timeZone = TimeZone.getTimeZone("GMT" + if (weather.timezone >= 0) "+${weather.timezone / 3600}" else "${weather.timezone / 3600}")
+        val currentTime = sdfTime.format(calendar.time)
+
 
         cityTextView.text = weather.name
+        dateTextView.text = "Сегодня: $currentDate"
         temperatureTextView.text = "${weather.main.temp.roundToInt()}°С"
         val iconUrl = "https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png"
         Glide.with(this).load(iconUrl).into(weatherIconImageView)
         descriptionTextView.text = weather.weather[0].description
-        feelsLikeTextView.text = "Ощущается как: ${weather.main.feelsLike.roundToInt()}°С"
+        feelsLikeTextView.text = currentTime
+        // feelsLikeTextView.text = "Ощущается как: ${weather.main.feelsLike.roundToInt()}°С"
         humidityTextView.text = "Влажность\n${weather.main.humidity}%"
         windTextView.text = "Сила ветра\n${weather.wind.speed} м/с"
         pressureTextView.text = "Давление\n${weather.main.pressure} гПа"
@@ -168,14 +196,14 @@ class MainActivity : AppCompatActivity() {
 
     // Функция обновления UI для почасового прогноза
     private fun updateHourlyForecastUI(hourlyList: List<ForecastItem>) {
-        val adapter = HourlyForecastAdapter(hourlyList)
-        hourlyWeatherTextView.text = "Прогноз на текущий день"
+        val adapter = HourlyForecastAdapter(hourlyList, weatherViewModel.cityTimezoneOffset)
+        hourlyWeatherTextView.text = "Прогноз на день"
         hourlyForecastRecyclerView.adapter = adapter
     }
 
     // Функция обновления UI для прогноза на 5 дней
     private fun updateFiveDayForecastUI(forecast: List<ForecastItem>) {
-        val adapter = ForecastAdapter(forecast)
+        val adapter = ForecastAdapter(forecast, weatherViewModel.cityTimezoneOffset)
         fiveDayWeatherTextView.text = "Прогноз на 5 дней"
         forecastRecyclerView.adapter = adapter
     }
@@ -191,7 +219,7 @@ class MainActivity : AppCompatActivity() {
         humidityTextView.text = ""
         windTextView.text = ""
         pressureTextView.text = ""
-        hourlyWeatherTextView.text = "Прогноз на текущий день"
+        hourlyWeatherTextView.text = "Прогноз на день"
         fiveDayWeatherTextView.text = "Прогноз на 5 дней"
         val placeholderList = List(5) {
             ForecastItem(dt = 0L, main = Main(temp = 0f, feelsLike = 0f, humidity = 0, pressure = 0), weather = emptyList())
@@ -199,8 +227,9 @@ class MainActivity : AppCompatActivity() {
         val dailyHolderList = List(8) {
             ForecastItem(dt = 0L, main = Main(temp = 0f, feelsLike = 0f, humidity = 0, pressure = 0), weather = emptyList())
         }
-        hourlyForecastRecyclerView.adapter = HourlyForecastAdapter(dailyHolderList)
-        forecastRecyclerView.adapter = ForecastAdapter(placeholderList)
+        val offset = weatherViewModel.cityTimezoneOffset
+        hourlyForecastRecyclerView.adapter = HourlyForecastAdapter(dailyHolderList, offset)
+        forecastRecyclerView.adapter = ForecastAdapter(placeholderList, offset)
         itemHourlyForecastProgressBar.visibility = View.GONE
         itemForecastProgressBar.visibility = View.GONE
     }

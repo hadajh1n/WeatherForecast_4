@@ -92,7 +92,7 @@
         <item name="android:textAlignment">center</item>
     </style>
 
-    // Прогноз погоды на текущий день (Время и температура)
+    // Прогноз погоды на текущий день (Дата, время и температура)
     <style name="itemHourlyForecastTextView" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/textColorBlackTextView</item>
         <item name="android:textSize">16dp</item>
