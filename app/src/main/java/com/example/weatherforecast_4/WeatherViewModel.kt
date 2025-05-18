@@ -203,6 +203,13 @@ class WeatherViewModel @Inject constructor(
         // Текущая дата в часовом поясе города
         val startDate = sdf.format(Date(currentTimeCity * 1000))
 
+        val calendar = Calendar.getInstance().apply {
+            time = sdf.parse(startDate) ?: Date(currentTimeCity * 1000)
+            add(Calendar.DAY_OF_MONTH, 1) // Добавление 1 дня
+        }
+
+        val tomorrowDate = sdf.format(calendar.time)
+
         val forecastsWithLocalTime = forecasts.map { forecast ->
             val localDt = forecast.dt + cityTimezoneOffset
             forecast.copy(dt = localDt)
@@ -211,14 +218,14 @@ class WeatherViewModel @Inject constructor(
         // Группируем по дате и выбираем прогноз на 12:00
         return forecastsWithLocalTime
             .groupBy { sdf.format(Date(it.dt * 1000)) }
-            .filterKeys { it >= startDate } // Пропуск текущего дня
+            .filterKeys { it >= tomorrowDate } // Начало с завтрашнего дня
             .mapNotNull { (_, items) ->
                 items.minByOrNull {
                     val time = timeFormat.format(Date(it.dt * 1000))
-                    kotlin.math.abs(time.toHourMinute() - 12 * 60) // Ближайший к 12:00
+                    kotlin.math.abs(time.toHourMinute() - 12 * 60)
                 }
             }
-            .take(5) // Ограничиваем 5 днями
+            .take(5)
     }
 
     private fun String.toHourMinute(): Int {
