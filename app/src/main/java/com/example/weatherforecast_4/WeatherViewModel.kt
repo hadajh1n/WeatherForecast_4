@@ -62,9 +62,18 @@ class WeatherViewModel @Inject constructor(
 
     var cityTimezoneOffset: Int = 0 // Смещение часового пояса города в секундах
 
+    // Загрузка сохранённого фона при создании ViewModel
     init {
-        // Выбираем случайный фон при создании ViewModel
-        selectRandomBackground()
+        val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
+        val isNewLaunch = prefs.getBoolean("isNewAppLaunch", true)
+        val cachedBackground = prefs.getInt("background_res_id", -1)
+
+        if (isNewLaunch || cachedBackground == -1) {
+            selectRandomBackground()
+            prefs.edit { putBoolean("isNewAppLaunch", false) }
+        } else {
+            _backgroundImageResId.value = cachedBackground
+        }
     }
 
     // Метод для выбора случайного фона
@@ -74,12 +83,6 @@ class WeatherViewModel @Inject constructor(
         context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE).edit {
             putInt("background_res_id", randomBackground)
         }
-    }
-
-    init {
-        val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
-        val cachedBackground = prefs.getInt("background_res_id", -1)
-        _backgroundImageResId.value = if (cachedBackground != -1) cachedBackground else backgroundImages[Random.nextInt(backgroundImages.size)]
     }
 
     fun fetchWeather(city: String) {
@@ -92,10 +95,15 @@ class WeatherViewModel @Inject constructor(
                     apiKey = apiKey,
                     lang = "ru"
                 )
+                val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
+                val lastCity = prefs.getString("last_city", null)
+                if (lastCity != response.name) {
+                    selectRandomBackground()
+                }
+
                 _weather.postValue(response)
                 _error.postValue(null)
 
-                val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
                 prefs.edit {
                     putString("last_city", response.name)
                 }

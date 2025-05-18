@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +57,9 @@ class MainActivity : AppCompatActivity() {
         val prefsStartActivity = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val isFirstLaunch = prefsStartActivity.getBoolean("isFirstLaunch", true)
 
+        val weatherPrefs = getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
+        weatherPrefs.edit { putBoolean("isNewAppLaunch", true) }
+
         if (isFirstLaunch) {
             // Первый запуск
             startActivity(Intent(this, StartActivity::class.java))
@@ -92,12 +96,13 @@ class MainActivity : AppCompatActivity() {
 
             // Наблюдение за сменой фона
             weatherViewModel.backgroundImageResId.observe(this) { resId ->
-                backgroundImageView.setImageResource(resId)
+                if (resId != null && resId != 0) {
+                    backgroundImageView.setImageResource(resId)
+                }
             }
 
             searchButton.setOnClickListener {
                 startActivity(Intent(this, SearchActivity::class.java))
-                finish()
             }
 
             // Проверка сохраненного города

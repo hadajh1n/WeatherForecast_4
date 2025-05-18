@@ -3,7 +3,6 @@ package com.example.weatherforecast_4
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import androidx.activity.viewModels
@@ -26,8 +25,7 @@ class SearchActivity : AppCompatActivity() {
         cityAutoComplete = findViewById(R.id.edtSearch)
 
         backButton.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            onBackPressed()
         }
 
         val cities = resources.getStringArray(R.array.cities)
