@@ -36,10 +36,9 @@ class ForecastAdapter(
         val iconCode = forecast.weather.firstOrNull()?.icon
 
         val sdfDate = SimpleDateFormat("d MMMM yyyy", Locale("ru")).apply {
-            timeZone = TimeZone.getTimeZone("UTC") // Установка UTC как базовый
+            timeZone = TimeZone.getTimeZone("UTC").apply { rawOffset = timezoneOffset * 1000 } // Локальный часовой пояс
         }
-        val adjustedTime = forecast.dt + timezoneOffset // Корректировка времени с учетом смещения города
-        val dateOnly = sdfDate.format(Date(adjustedTime * 1000))
+        val dateOnly = sdfDate.format(Date(forecast.dt * 1000))
 
         if (forecast.dt == 0L || iconCode == null || iconCode.isEmpty()) {
             holder.dateTextView.text = "Нет данных"

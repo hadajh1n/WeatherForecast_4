@@ -95,16 +95,14 @@ class WeatherViewModel @Inject constructor(
                 _weather.postValue(response)
                 _error.postValue(null)
 
-                // Сохранение города
                 val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
                 prefs.edit {
                     putString("last_city", response.name)
                 }
 
-                // Сохраняем смещение часового пояса города
                 cityTimezoneOffset = response.timezone
 
-                // Запрос прогноза
+                // Последовательный запуск прогнозов
                 fetchHourlyForecast(city)
                 fetchFiveDayForecast(city)
                 _isLoading.value = false
@@ -140,6 +138,11 @@ class WeatherViewModel @Inject constructor(
                 _hourlyForecast.postValue(hourlyList)
                 val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
                 prefs.edit {
+                    for (i in 0 until prefs.getInt("forecast_count", 0)) {
+                        remove("hourly_dt_$i")
+                        remove("hourly_temp_$i")
+                        remove("hourly_icon_$i")
+                    }
                     hourlyList.forEachIndexed { index, forecast ->
                         putLong("hourly_dt_$index", forecast.dt - cityTimezoneOffset)
                         putInt("hourly_temp_$index", forecast.main.temp.roundToInt())
@@ -166,7 +169,7 @@ class WeatherViewModel @Inject constructor(
                 val currentTimeCity = currentWeather?.let { it.dt + it.timezone }
                     ?: throw IllegalStateException("Текущие данные погоды не доступны")
                 // Выбираем данные на 12:00 для каждого дня
-                val dailyForecasts = aggregateToDaily(response.list)
+                val dailyForecasts = aggregateToDaily(response.list, currentTimeCity)
                 _forecast.postValue(if (dailyForecasts.isEmpty()) null else dailyForecasts)
                 val prefs = context.getSharedPreferences("WeatherPrefs", Context.MODE_PRIVATE)
                 prefs.edit {
@@ -188,16 +191,17 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    private fun aggregateToDaily(forecasts: List<ForecastItem>): List<ForecastItem> {
+    private fun aggregateToDaily(forecasts: List<ForecastItem>, currentTimeCity: Long): List<ForecastItem> {
+        if (forecasts.isEmpty()) return emptyList()
+
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale("ru")).apply {
-            timeZone = TimeZone.getTimeZone("UTC") // UTC как базовый
+            timeZone = TimeZone.getTimeZone("UTC").apply { rawOffset = cityTimezoneOffset * 1000 }
         }
         val timeFormat = SimpleDateFormat("HH:mm", Locale("ru")).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
+            timeZone = TimeZone.getTimeZone("UTC").apply { rawOffset = cityTimezoneOffset * 1000 }
         }
         // Текущая дата в часовом поясе города
-        val currentTimeCity = System.currentTimeMillis() + cityTimezoneOffset * 1000L
-        val startDate = sdf.format(Date(currentTimeCity))
+        val startDate = sdf.format(Date(currentTimeCity * 1000))
 
         val forecastsWithLocalTime = forecasts.map { forecast ->
             val localDt = forecast.dt + cityTimezoneOffset
@@ -207,7 +211,7 @@ class WeatherViewModel @Inject constructor(
         // Группируем по дате и выбираем прогноз на 12:00
         return forecastsWithLocalTime
             .groupBy { sdf.format(Date(it.dt * 1000)) }
-            .filterKeys { it > startDate } // Пропуск текущего дня
+            .filterKeys { it >= startDate } // Пропуск текущего дня
             .mapNotNull { (_, items) ->
                 items.minByOrNull {
                     val time = timeFormat.format(Date(it.dt * 1000))

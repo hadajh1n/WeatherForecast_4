@@ -34,10 +34,9 @@ class HourlyForecastAdapter(
         val iconCode = forecast.weather.firstOrNull()?.icon
 
         val sdfTime = SimpleDateFormat("HH:mm", Locale("ru")).apply {
-            timeZone = TimeZone.getTimeZone("UTC") // Установка UTC как базовый
+            timeZone = TimeZone.getTimeZone("UTC").apply { rawOffset = timezoneOffset * 1000 } // Локальный часовой пояс
         }
-        val adjustedTime = forecast.dt + timezoneOffset // Корректировка времени с учетом смещения города
-        val dateTime = sdfTime.format(Date(adjustedTime * 1000))
+        val dateTime = sdfTime.format(Date(forecast.dt * 1000))
 
         if (forecast.dt == 0L || iconCode == null || iconCode.isEmpty()) {
             holder.timeTextView.text = "Нет данных"
